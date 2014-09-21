@@ -37,26 +37,26 @@
  */
 var calc_navbar_height = function() {
 		var height = null;
-	
+
 		if ($('#header').length)
 			height = $('#header').height();
-	
+
 		if (height === null)
 			height = $('<div id="header"></div>').height();
-	
+
 		if (height === null)
 			return 49;
 		// default
 		return height;
 	},
-	
-	navbar_height = calc_navbar_height, 
+
+	navbar_height = calc_navbar_height,
 /*
  * APP DOM REFERENCES
  * Description: Obj DOM reference, please try to avoid changing these
- */	
+ */
 	shortcut_dropdown = $('#shortcut'),
-	
+
 	bread_crumb = $('#ribbon ol.breadcrumb'),
 /*
  * Top menu on/off
@@ -70,14 +70,14 @@ var calc_navbar_height = function() {
  * JS ARRAY SCRIPT STORAGE
  * Description: used with loadScript to store script path and file name
  * so it will not load twice
- */	
-	jsArray = {},	
+ */
+	jsArray = {},
 /*
  * DETECT MOBILE DEVICES
  * Description: Detects mobile device - if any of the listed device is detected
- * a class is inserted to $.root_ and the variable thisDevice is decleard. 
+ * a class is inserted to $.root_ and the variable thisDevice is decleard.
  * (so far this is covering most hand held devices)
- */	
+ */
 	ismobile = (/iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
 /*
  * CHECK MOBILE VIEW
@@ -90,19 +90,19 @@ var calc_navbar_height = function() {
 		// Mobile
 		$.root_.addClass("mobile-detected");
 		device = "mobile";
-		
+
 		if (fastClick) {
 			// Removes the tap delay in idevices
-			// dependency: js/plugin/fastclick/fastclick.js 
+			// dependency: js/plugin/fastclick/fastclick.js
 			$.root_.addClass("needsclick");
-			FastClick.attach(document.body); 
+			FastClick.attach(document.body);
 		}
-		
+
 	}
 /*
  * CHECK FOR MENU POSITION
  */
-if ($('body').hasClass("menu-on-top") || localStorage.getItem('sm-setmenu')=='top' ) { 
+if ($('body').hasClass("menu-on-top") || localStorage.getItem('sm-setmenu')=='top' ) {
 	topmenu = true;
 	$('body').addClass("menu-on-top");
 }
@@ -114,23 +114,23 @@ if ($('body').hasClass("menu-on-top") || localStorage.getItem('sm-setmenu')=='to
  */
 
 jQuery(document).ready(function() {
-	
-	
+
+
 	/*
 	 * SMART ACTIONS
 	 * ANGULAR: handled via "action" directive
 	 */
 	/*var smartActions = {
-	    
-	    // LOGOUT MSG 
+
+	    // LOGOUT MSG
 	    userLogout: function($this){
-	
+
 			// ask verification
 			$.SmartMessageBox({
 				title : "<i class='fa fa-sign-out txt-color-orangeDark'></i> Logout <span class='txt-color-orangeDark'><strong>" + $('#show-shortcut').text() + "</strong></span> ?",
 				content : $this.data('logout-msg') || "You can improve your security further after logging out by closing this opened browser",
 				buttons : '[No][Yes]'
-	
+
 			}, function(ButtonPressed) {
 				if (ButtonPressed == "Yes") {
 					$.root_.addClass('animated fadeOutUp');
@@ -140,13 +140,13 @@ jQuery(document).ready(function() {
 			function logout() {
 				window.location = $this.attr('href');
 			}
-	
+
 		},
 
 		// RESET WIDGETS
 	    resetWidgets: function(){
 			$.widresetMSG = $this.data('reset-msg');
-			
+
 			$.SmartMessageBox({
 				title : "<i class='fa fa-refresh' style='color:green'></i> Clear Local Storage",
 				content : $.widresetMSG || "Would you like to RESET all your saved widgets and clear LocalStorage?",
@@ -156,17 +156,17 @@ jQuery(document).ready(function() {
 					localStorage.clear();
 					location.reload();
 				}
-	
+
 			});
 	    },
-	    
-	    // LAUNCH FULLSCREEN 
+
+	    // LAUNCH FULLSCREEN
 	    launchFullscreen: function(element){
-	
+
 			if (!$.root_.hasClass("full-screen")) {
-		
+
 				$.root_.addClass("full-screen");
-		
+
 				if (element.requestFullscreen) {
 					element.requestFullscreen();
 				} else if (element.mozRequestFullScreen) {
@@ -176,11 +176,11 @@ jQuery(document).ready(function() {
 				} else if (element.msRequestFullscreen) {
 					element.msRequestFullscreen();
 				}
-		
+
 			} else {
-				
+
 				$.root_.removeClass("full-screen");
-				
+
 				if (document.exitFullscreen) {
 					document.exitFullscreen();
 				} else if (document.mozCancelFullScreen) {
@@ -188,11 +188,11 @@ jQuery(document).ready(function() {
 				} else if (document.webkitExitFullscreen) {
 					document.webkitExitFullscreen();
 				}
-		
+
 			}
-	
+
 	   },
-	
+
 	   // MINIFY MENU
 	    minifyMenu: function(){
 	    	if (!$.root_.hasClass("menu-on-top")){
@@ -202,19 +202,19 @@ jQuery(document).ready(function() {
 				$this.effect("highlight", {}, 500);
 			}
 	    },
-	    
-	    // TOGGLE MENU 
+
+	    // TOGGLE MENU
 	    toggleMenu: function(){
 	    	if (!$.root_.hasClass("menu-on-top")){
 				$('html').toggleClass("hidden-menu-mobile-lock");
 				$.root_.toggleClass("hidden-menu");
 				$.root_.removeClass("minified");
 	    	}
-	    },     
-	
-	    // TOGGLE SHORTCUT 
+	    },
+
+	    // TOGGLE SHORTCUT
 	    toggleShortcut: function(){
-	    	
+
 			if (shortcut_dropdown.is(":visible")) {
 				shortcut_buttons_hide();
 			} else {
@@ -226,25 +226,25 @@ jQuery(document).ready(function() {
 				e.preventDefault();
 				window.location = $(this).attr('href');
 				setTimeout(shortcut_buttons_hide, 300);
-		
+
 			});
-		
+
 			// SHORTCUT buttons goes away if mouse is clicked outside of the area
 			$(document).mouseup(function(e) {
 				if (!shortcut_dropdown.is(e.target) && shortcut_dropdown.has(e.target).length === 0) {
 					shortcut_buttons_hide();
 				}
 			});
-			
+
 			// SHORTCUT ANIMATE HIDE
 			function shortcut_buttons_hide() {
 				shortcut_dropdown.animate({
 					height : "hide"
 				}, 300, "easeOutCirc");
 				$.root_.removeClass('shortcut-on');
-		
+
 			}
-		
+
 			// SHORTCUT ANIMATE SHOW
 			function shortcut_buttons_show() {
 				shortcut_dropdown.animate({
@@ -252,9 +252,9 @@ jQuery(document).ready(function() {
 				}, 200, "easeOutCirc");
 				$.root_.addClass('shortcut-on');
 			}
-	
-	    }  
-	   
+
+	    }
+
 	};
 
 
@@ -262,35 +262,35 @@ jQuery(document).ready(function() {
 		var $this = $(this);
 		smartActions.userLogout($this);
 		e.preventDefault();
-	}); 
+	});
 
-	$.root_.on('click', '[data-action="resetWidgets"]', function(e) {	
+	$.root_.on('click', '[data-action="resetWidgets"]', function(e) {
 		var $this = $(this);
 		smartActions.resetWidgets($this);
 		e.preventDefault();
 	});
-	
-	$.root_.on('click', '[data-action="launchFullscreen"]', function(e) {	
+
+	$.root_.on('click', '[data-action="launchFullscreen"]', function(e) {
 		smartActions.launchFullscreen(document.documentElement);
 		e.preventDefault();
-	}); 
-	
+	});
+
 	$.root_.on('click', '[data-action="minifyMenu"]', function(e) {
 		var $this = $(this);
 		smartActions.minifyMenu($this);
 		e.preventDefault();
-	}); 
-	
-	$.root_.on('click', '[data-action="toggleMenu"]', function(e) {	
+	});
+
+	$.root_.on('click', '[data-action="toggleMenu"]', function(e) {
 		smartActions.toggleMenu();
 		e.preventDefault();
-	});  
+	});
 
-	$.root_.on('click', '[data-action="toggleShortcut"]', function(e) {	
+	$.root_.on('click', '[data-action="toggleShortcut"]', function(e) {
 		smartActions.toggleShortcut();
 		e.preventDefault();
 	}); */
-	
+
 
 	/*
 	 * Fire tooltips
@@ -398,7 +398,7 @@ jQuery(document).ready(function() {
 
 
 /*
- * RESIZER WITH THROTTLE
+ THROTTLE
  * Source: http://benalman.com/code/projects/jquery-resize/examples/resize/
  */
 
@@ -412,7 +412,7 @@ jQuery(document).ready(function() {
         str_delay = 'delay',
         str_throttle = 'throttleWindow';
 
-    jq_resize[str_delay] = throttle_delay;
+    jq_resize[str_delay] = str_delay;
 
     jq_resize[str_throttle] = true;
 
@@ -567,7 +567,7 @@ var ie = ( function() {
 
 		return v > 4 ? v : undef;
 
-	}()); // do we need this? 
+	}()); // do we need this?
 
 /* ~ END: DETECT IE VERSION */
 
@@ -678,7 +678,7 @@ jQuery.fn.doesExist = function() {
 
 /*
  * FULL SCREEN FUNCTION
- 
+
 
 // Find the right method, call on correct element
 function launchFullscreen(element) {
@@ -698,9 +698,9 @@ function launchFullscreen(element) {
 		}
 
 	} else {
-		
+
 		$.root_.removeClass("full-screen");
-		
+
 		if (document.exitFullscreen) {
 			document.exitFullscreen();
 		} else if (document.mozCancelFullScreen) {
@@ -855,7 +855,7 @@ function runAllCharts() {
 		    thisMaxSpotColor,
 		    thishighlightSpotColor,
 		    thisHighlightLineColor,
-		    thisSpotRadius,			        
+		    thisSpotRadius,
 			pieColors,
 		    pieWidthHeight,
 		    pieBorderColor,
@@ -914,7 +914,7 @@ function runAllCharts() {
 		    thishighlightSpotColor2,
 		    thisFillColor1,
 		    thisFillColor2;
-				    				    
+
 
 		$('.sparkline').each(function() {
 			var $this = $(this);
@@ -929,7 +929,7 @@ function runAllCharts() {
 				    sparklineBarSpacing = $this.data('sparkline-barspacing') || 2;
 				    sparklineNegBarColor = $this.data('sparkline-negbar-color') || '#A90329';
 				    sparklineStackedColor = $this.data('sparkline-barstacked-color') || ["#A90329", "#0099c6", "#98AA56", "#da532c", "#4490B1", "#6E9461", "#990099", "#B4CAD3"];
-				        
+
 				$this.sparkline('html', {
 					barColor : barColor,
 					type : sparklineType,
@@ -957,15 +957,15 @@ function runAllCharts() {
 				    thishighlightSpotColor = $this.data('sparkline-highlightspot-color') || '#50f050';
 				    thisHighlightLineColor = $this.data('sparkline-highlightline-color') || 'f02020';
 				    thisSpotRadius = $this.data('sparkline-spotradius') || 1.5;
-					thisChartMinYRange = $this.data('sparkline-min-y') || 'undefined'; 
-					thisChartMaxYRange = $this.data('sparkline-max-y') || 'undefined'; 
-					thisChartMinXRange = $this.data('sparkline-min-x') || 'undefined'; 
-					thisChartMaxXRange = $this.data('sparkline-max-x') || 'undefined'; 
-					thisMinNormValue = $this.data('min-val') || 'undefined'; 
-					thisMaxNormValue = $this.data('max-val') || 'undefined'; 
+					thisChartMinYRange = $this.data('sparkline-min-y') || 'undefined';
+					thisChartMaxYRange = $this.data('sparkline-max-y') || 'undefined';
+					thisChartMinXRange = $this.data('sparkline-min-x') || 'undefined';
+					thisChartMaxXRange = $this.data('sparkline-max-x') || 'undefined';
+					thisMinNormValue = $this.data('min-val') || 'undefined';
+					thisMaxNormValue = $this.data('max-val') || 'undefined';
 					thisNormColor =  $this.data('norm-color') || '#c0c0c0';
 					thisDrawNormalOnTop = $this.data('draw-normal') || false;
-				    
+
 				$this.sparkline('html', {
 					type : 'line',
 					width : sparklineWidth,
@@ -999,7 +999,7 @@ function runAllCharts() {
 				    pieWidthHeight = $this.data('sparkline-piesize') || 90;
 				    pieBorderColor = $this.data('border-color') || '#45494C';
 				    pieOffset = $this.data('sparkline-offset') || 0;
-				    
+
 				$this.sparkline('html', {
 					type : 'pie',
 					width : pieWidthHeight,
@@ -1032,7 +1032,7 @@ function runAllCharts() {
 				    thisBoxOutlineFill = $this.data('sparkline-outlinefill-color') || '#f0f0f0';
 				    thisBoxMedianColor = $this.data('sparkline-outlinemedian-color') || '#f00000';
 				    thisBoxTargetColor = $this.data('sparkline-outlinetarget-color') || '#40a020';
-				    
+
 				$this.sparkline('html', {
 					type : 'box',
 					width : thisBoxWidth,
@@ -1064,7 +1064,7 @@ function runAllCharts() {
 				    thisBulletColor = $this.data('sparkline-bullet-color') || '#ed1c24';
 				    thisBulletPerformanceColor = $this.data('sparkline-performance-color') || '#3030f0';
 				    thisBulletRangeColors = $this.data('sparkline-bulletrange-color') || ["#d3dafe", "#a8b6ff", "#7f94ff"];
-				    
+
 				$this.sparkline('html', {
 
 					type : 'bullet',
@@ -1087,7 +1087,7 @@ function runAllCharts() {
 				    thisDiscreteLineHeight = $this.data('sparkline-line-height') || 5;
 				    thisDiscreteThrushold = $this.data('sparkline-threshold') || 'undefined';
 				    thisDiscreteThrusholdColor = $this.data('sparkline-threshold-color') || '#ed1c24';
-				    
+
 				$this.sparkline('html', {
 
 					type : 'discrete',
@@ -1112,7 +1112,7 @@ function runAllCharts() {
 				    thisTristateBarWidth = $this.data('sparkline-barwidth') || 5;
 				    thisTristateBarSpacing = $this.data('sparkline-barspacing') || 2;
 				    thisZeroAxis = $this.data('sparkline-zeroaxis') || false;
-				    
+
 				$this.sparkline('html', {
 
 					type : 'tristate',
@@ -1137,7 +1137,7 @@ function runAllCharts() {
 				    thisLineWidth = $this.data('sparkline-line-width') || 1;
 				    thisLineColor = $this.data('sparkline-color-top') || '#ed1c24';
 				    thisBarColor = $this.data('sparkline-color-bottom') || '#333333';
-				    
+
 				$this.sparkline($this.data('sparkline-bar-val'), {
 
 					type : 'bar',
@@ -1189,7 +1189,7 @@ function runAllCharts() {
 				        thisHighlightLineColor1;
 				    thisFillColor1 = $this.data('sparkline-fillcolor-top') || 'transparent';
 				    thisFillColor2 = $this.data('sparkline-fillcolor-bottom') || 'transparent';
-				    
+
 				$this.sparkline(sparklineValue, {
 
 					type : 'line',
@@ -1254,9 +1254,9 @@ function runAllCharts() {
 			var barColor = $this.css('color') || $this.data('pie-color'),
 			    trackColor = $this.data('pie-track-color') || '#eeeeee',
 			    size = parseInt($this.data('pie-size')) || 25;
-			    
+
 			$this.easyPieChart({
-				
+
 				barColor : barColor,
 				trackColor : trackColor,
 				scaleColor : false,
@@ -1268,7 +1268,7 @@ function runAllCharts() {
 				onStep : function(value) {
 					this.$el.find('span').text(~~value);
 				}
-				
+
 			});
 		});
 
@@ -1354,10 +1354,10 @@ function setup_widgets_desktop() {
 			},
 			rtl : false, // best not to toggle this!
 			onChange : function() {
-				
+
 			},
 			onSave : function() {
-				
+
 			},
 			ajaxnav : $.navAsAjax // declears how the localstorage should be saved (HTML or AJAX page)
 
@@ -1527,20 +1527,20 @@ function checkURL() {
 
 	//get the url by removing the hash
 	var url = location.hash.replace(/^#/, '');
-	
+
 	//BEGIN: IE11 Work Around
 	if (!url) {
-	
+
 		try {
 			var documentUrl = window.document.URL;
 			if (documentUrl) {
 				if (documentUrl.indexOf('#', 0) > 0 && documentUrl.indexOf('#', 0) < (documentUrl.length + 1)) {
 					url = documentUrl.substring(documentUrl.indexOf('#', 0) + 1);
-	
+
 				}
-	
+
 			}
-	
+
 		} catch (err) {}
 	}
 	//END: IE11 Work Around
@@ -1583,11 +1583,11 @@ function loadURL(url, container) {
 		dataType : 'html',
 		cache : true, // (warning: setting it to false will cause a timestamp and will call the request twice)
 		beforeSend : function() {
-			
+
 			//IE11 bug fix for googlemaps (delete all google map instances)
 			//check if the page is ajax = true, has google map class and the container is #content
 			if ($.navAsAjax && $(".google_maps")[0] && (container[0] == $("#content")[0]) ) {
-				
+
 				// target gmaps if any on page
 				var collection = $(".google_maps"),
 					i = 0;
@@ -1596,7 +1596,7 @@ function loadURL(url, container) {
 				    i ++;
 				    // get map id from class elements
 				    var divDealerMap = document.getElementById(this.id);
-				    
+
 				    if(i == collection.length + 1) {
 					    // "callback"
 					    //console.log("all maps destroyed");
@@ -1606,53 +1606,53 @@ function loadURL(url, container) {
 						//console.log(this.id + " destroying maps...");
 					}
 				});
-				
+
 				//console.log("google maps nuked!!!");
-				
+
 			}; //end fix
-			
+
 			// destroy all datatable instances
 			if ( $.navAsAjax && $('.dataTables_wrapper')[0] && (container[0] == $("#content")[0]) ) {
-				
-				var tables = $.fn.dataTable.fnTables(true);				
+
+				var tables = $.fn.dataTable.fnTables(true);
 				$(tables).each(function () {
 				    $(this).dataTable().fnDestroy();
 				});
 				//console.log("datatable nuked!!!");
 			}
 			// end destroy
-			
+
 			// pop intervals (destroys jarviswidget related intervals)
 			if ( $.navAsAjax && $.intervalArr.length > 0 && (container[0] == $("#content")[0]) && enableJarvisWidgets ) {
-				
+
 				while($.intervalArr.length > 0)
         			clearInterval($.intervalArr.pop());
         			//console.log("all intervals cleared..")
-        			
+
 			}
 			// end pop intervals
-			
+
 			// empty container to start garbage memory collection
 			container.html("");
-			
+
 			// place cog
 			container.html('<h1 class="ajax-loading-animation"><i class="fa fa-cog fa-spin"></i> Loading...</h1>');
-		
+
 			// Only draw breadcrumb if it is main content material
 			if (container[0] == $("#content")[0]) {
-				
+
 				// clear everything else except these key DOM elements
 				// we do this because sometime plugins will leave dynamic elements behind
 				$('body').find('> *').filter(':not(' + ignore_key_elms + ')').empty().remove();
-				
+
 				// draw breadcrumb
 				drawBreadCrumb();
-				
+
 				// scroll up
 				$("html").animate({
 					scrollTop : 0
 				}, "fast");
-			} 
+			}
 			// end if
 		},
 		success : function(data) {
@@ -1665,7 +1665,7 @@ function loadURL(url, container) {
 		error : function(xhr, ajaxOptions, thrownError) {
 			container.html('<h4 class="ajax-loading-error"><i class="fa fa-warning txt-color-orangeDark"></i> Error 404! Page not found.</h4>');
 		},
-		async : true 
+		async : true
 	});
 
 	//console.log("ajax request sent");
@@ -1675,7 +1675,7 @@ function loadURL(url, container) {
 // UPDATE BREADCRUMB
 function drawBreadCrumb() {
 	var nav_elems = $('nav li.active > a'), count = nav_elems.length;
-	
+
 	//console.log("breadcrumb")
 	bread_crumb.empty();
 	bread_crumb.append($("<li>Home</li>"));
@@ -1698,13 +1698,13 @@ function pageSetUp() {
 
 	if (device === "desktop"){
 		// is desktop
-		
+
 		// activate tooltips
 		$("[rel=tooltip]").tooltip();
-	
+
 		// activate popovers
 		$("[rel=popover]").popover();
-	
+
 		// activate popovers with hover states
 		$("[rel=popover-hover]").popover({
 			trigger : "hover"
@@ -1712,34 +1712,34 @@ function pageSetUp() {
 
 		// setup widgets
 		setup_widgets_desktop();
-	
+
 		// activate inline charts
 		runAllCharts();
-	
+
 		// run form elements
 		runAllForms();
 
 	} else {
-		
+
 		// is mobile
-		
+
 		// activate popovers
 		$("[rel=popover]").popover();
-	
+
 		// activate popovers with hover states
 		$("[rel=popover-hover]").popover({
 			trigger : "hover"
 		});
-	
+
 		// activate inline charts
 		runAllCharts();
-	
+
 		// setup widgets
 		setup_widgets_mobile();
-	
+
 		// run form elements
 		runAllForms();
-		
+
 	}
 
 }
@@ -1753,4 +1753,4 @@ $('body').on('click', function(e) {
 			$(this).popover('hide');
 		}
 	});
-}); 
+});
